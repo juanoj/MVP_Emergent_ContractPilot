@@ -1,0 +1,91 @@
+{
+  "theme": "Light mode preference (Swiss & High-Contrast - Archetype 4) with dark mode support.",
+  "typography": {
+    "headings": {
+      "font_family": "Cabinet Grotesk, sans-serif",
+      "instruction": "Use Cabinet Grotesk for all H1-H4 headings. Apply 'tracking-tight' for sizes above 32px. Use varying font weights (e.g., font-light or font-black) for tension."
+    },
+    "body": {
+      "font_family": "Satoshi, sans-serif",
+      "instruction": "Use Satoshi for body text. Maintain clean, geometric legibility with normal letter spacing."
+    },
+    "labels_overlines": {
+      "instruction": "MUST be Uppercase + Tiny + Wide Spacing (tracking-[0.2em])."
+    }
+  },
+  "colors": {
+    "background": {
+      "light": "#FAFAFA",
+      "dark": "#09090B"
+    },
+    "surface": {
+      "light": "#FFFFFF",
+      "dark": "#18181B",
+      "instruction": "Surfaces must have a sharp 1px border (border-black/5 or border-white/10). No soft muddy shadows. Follow 'Grid Borders' pattern for the dashboard bento grids."
+    },
+    "primary": {
+      "value": "#18181B",
+      "dark_value": "#FAFAFA",
+      "instruction": "Monochrome default. Use Signal Red (#E53935) or Warning Yellow (#FACC15) ONLY for functional alerts (upcoming renewals, high spend)."
+    },
+    "accents": {
+      "savings": "#10B981",
+      "overspend": "#EF4444",
+      "neutral_border": "#E4E4E7"
+    }
+  },
+  "visual_enhancers": {
+    "surfaces": "Use Neumorphism (The Tactile Variant) selectively for toggles, and Grid Borders (Technical Look) for data-heavy dashboard sections.",
+    "borders": "1px crisp borders on cards. border-border/40. Consider removing the right border on the last item of a row to create an open edge.",
+    "hover_states": "Hover states must have HIGHER contrast. Buttons: translate-y-[-2px] with increased shadow."
+  },
+  "components": {
+    "cards": "Flat solid background, 1px subtle border, no initial shadow. On hover: slight lift (-translate-y-1) and subtle shadow.",
+    "navigation": "Sidebar or visible top nav. Must use Solid Background with a hard bottom border or right border. No transparent navbars.",
+    "tables": "Use Shadcn Table component. Dense padding for financial data. Right-align numeric columns.",
+    "charts": "Use Recharts or Shadcn Chart. Must be color-blind friendly. Use crisp lines, minimal grid lines.",
+    "buttons": "Sharp corners or subtle roundness (max 8px). High-contrast background."
+  },
+  "grids_and_layouts": {
+    "dashboard_grid": "MODE B: High Density Grid. Base Grid: grid-cols-1 md:grid-cols-3 lg:grid-cols-4. Tight gaps (gap-4 or gap-6).",
+    "spacing": "Generous Spacing Philosophy for outer containers (p-8 to p-12). Dense padding inside data tables.",
+    "alignment": "Optical alignment over geometrical. Left-align dense data, right-align monetary values."
+  },
+  "motion": {
+    "micro_interactions": "Hover, click, focus states required. Transition: transform 0.2s ease, opacity 0.2s ease.",
+    "entrance": "Staggered entrance for list items in the subscription table."
+  },
+  "accessibility": {
+    "contrast": "Minimum 4.5:1 for normal text. Explicitly set text color on hover.",
+    "focus": "Focus states must have HIGHER contrast (e.g., focus:ring-2 focus:ring-primary).",
+    "testing": "All interactive elements MUST include data-testid attribute (e.g., data-testid='upload-contract-btn')."
+  },
+  "media_and_icons": {
+    "icons_library": "lucide-react (default) or @phosphor-icons/react for dense financial/developer look.",
+    "image_urls": {
+      "business_owner_avatar": "https://images.unsplash.com/photo-1513872900980-460ea4c87668?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNTl8MHwxfHNlYXJjaHwyfHxidXNpbmVzcyUyMG93bmVyJTIwcG9ydHJhaXR8ZW58MHx8fHwxNzg0MjMzMjIwfDA&ixlib=rb-4.1.0&q=85",
+      "slack_logo": "https://images.unsplash.com/photo-1557200134-3103da7b6bff?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NzB8MHwxfHNlYXJjaHw0fHxzbGFjayUyMGxvZ298ZW58MHx8fHwxNzg0MjMzMjE5fDA&ixlib=rb-4.1.0&q=85",
+      "google_logo": "https://images.unsplash.com/photo-1662947190722-5d272f82a526?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MDZ8MHwxfHNlYXJjaHwxfHxnb29nbGUlMjBsb2dvfGVufDB8fHx8MTc4NDIzMzIyNXww&ixlib=rb-4.1.0&q=85"
+    }
+  },
+  "instructions_to_main_agent": [
+    "Prioritize a dense, high-contrast, 'Swiss' aesthetic suitable for financial/contract management.",
+    "Use Recharts to show market comparison data visually (Current Price vs Market Price).",
+    "Ensure 'Upload Contract' (PDF) and 'Scan Gmail' buttons are highly visible primary actions.",
+    "Subscription List must support categorisation (SaaS, AI, Internet, etc.) via tabs or pills.",
+    "Implement a timeline or calendar component for upcoming renewals.",
+    "Use Shadcn UI extensively for data tables, dialogs, and selects. Customize border radius to max 8px.",
+    "Ensure all monetary values and savings percentages are visually distinct (e.g., green text for savings)."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "Do not converge toward generic outputs. Use stark contrast and structured density to look professional.",
+    "Create depth through 1px crisp borders and targeted drop shadows, NOT muddy universal shadows.",
+    "You MUST NOT apply universal transition (transition: all). Use specific transitions.",
+    "You MUST NOT center align the app container. Keep reading flow natural (left-aligned).",
+    "Use modern button styles (max 8px radius) with interaction animations.",
+    "NEVER use AI assistant Emoji characters like \ud83e\udd16\ud83e\udde0\ud83d\udcad for icons. Use real icons.",
+    "Include data-testid on all interactive elements.",
+    "Use 'sonner' for toasts.",
+    "If building components, refer to Shadcn UI practices (raw HTML/Tailwind for layouts, Shadcn for interactive logic)."
+  ]
+}
