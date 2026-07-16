@@ -1,0 +1,51 @@
+{
+  "summary": "Smoke-tested backend and frontend for ContractPilot MVP. Health, auth (bearer), GET subs, dashboard stats, CSV import and unauth 401 checks pass. Frontend landing, protected-route redirect, dashboard/sidebar/KPIs and Add Subscription dialog render correctly with all data-testids. CRITICAL: POST /api/subscriptions returns 500 due to Mongo ObjectId in response payload, breaking the primary Add-subscription UX. Contract upload and market-refresh (slow Claude calls) not exercised due to the CRUD blocker.",
+  "tested_scope": ["backend", "frontend", "auth", "integration"],
+  "passed": [
+    "GET /api/ -> 200 {service:ContractPilot,status:ok}",
+    "GET /api/auth/me unauthenticated -> 401",
+    "GET /api/auth/me with Bearer token (seeded session in Mongo) -> 200 with user payload",
+    "GET /api/subscriptions -> 200, user-scoped",
+    "POST /api/imports/accounting-csv -> 200 {created:2}",
+    "GET /api/dashboard/stats -> 200 with total_subs/monthly_spend/annual_spend/upcoming_renewals/by_category (math: yearly/12, quarterly/3 verified via CSV import)",
+    "POST /api/subscriptions without auth -> 401",
+    "Frontend landing (/) renders landing-signin-btn and hero-cta-btn",
+    "Unauthenticated /dashboard redirects to /",
+    "With session_token cookie, /dashboard loads app-sidebar, kpi-grid, nav-overview/subscriptions/renewals/contracts",
+    "Subscriptions page: add-sub-btn opens dialog with input-service/provider/category/cycle/price/currency/renewal fields"
+  ],
+  "failed": [
+    {
+      "area": "backend / subscriptions CRUD",
+      "issue": "POST /api/subscriptions returns 500 Internal Server Error. Insert succeeds (doc appears in GET list) but response serialization fails with 'ObjectId is not iterable' because motor's insert_one mutates the dict in-place adding _id (ObjectId), and server.py returns that same dict. Same bug affects contracts/upload response (returns sub_doc) and possibly any endpoint that returns the inserted doc.",
+      "evidence": "backend.err.log: TypeError: 'ObjectId' object is not iterable at fastapi/encoders.py; access log shows 'POST /api/subscriptions HTTP/1.1 500'. Fix: pop('_id', None) from doc before returning, or build the response dict from sub.model_dump() before insert.",
+      "priority": "HIGH"
+    },
+    {
+      "area": "backend / routing",
+      "issue": "PATCH and DELETE /api/subscriptions/{id} return 307 when {id} is empty (redirect strips method). Minor - only observed because POST failed and sub_id was empty in the test. Not a real bug, but worth noting: FastAPI's default trailing-slash redirect happens on /api/subscriptions/ with methods other than GET.",
+      "evidence": "access log: PATCH /api/subscriptions/ -> 307; DELETE /api/subscriptions/ -> 307",
+      "priority": "LOW"
+    },
+    {
+      "area": "test coverage / deferred",
+      "issue": "Contract PDF upload (Claude Sonnet 4.5) and POST /api/subscriptions/{id}/refresh-market NOT executed. Skipped after core CRUD 500 blocker to avoid burning latency on slow LLM calls before the primary bug is fixed.",
+      "evidence": "n/a - deferred",
+      "priority": "MEDIUM"
+    },
+    {
+      "area": "test_credentials",
+      "issue": "/app/memory/test_credentials.md is empty. Seeded a MongoDB session_token directly for testing as documented in the request.",
+      "evidence": "file has only header comments",
+      "priority": "LOW"
+    }
+  ],
+  "action_items": [
+    "Fix POST /api/subscriptions response: after `await db.subscriptions.insert_one(doc)`, remove the injected `_id` before returning (e.g. `doc.pop('_id', None)`) OR return `sub.model_dump(mode='json')` built before insertion.",
+    "Apply the same fix in /api/contracts/upload where `sub_doc` is returned after insert_one.",
+    "Re-run: POST /api/subscriptions -> expect 200 with the created sub; then PATCH/DELETE against a real id; then contract PDF upload and refresh-market end-to-end."
+  ],
+  "success_rate": {"backend": "83% (5/6 core endpoints; POST subs failing)", "frontend": "100% of smoke-tested UI (landing, auth redirect, dashboard, subs dialog)"},
+  "retest_needed": true,
+  "full_testing_deferred": true
+}
