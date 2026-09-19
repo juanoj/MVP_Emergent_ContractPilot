@@ -200,6 +200,7 @@ async def create_sub(payload: SubscriptionCreate, user: User = Depends(get_curre
     doc = sub.model_dump()
     doc["created_at"] = doc["created_at"].isoformat()
     await db.subscriptions.insert_one(doc)
+    doc.pop("_id", None)
     return doc
 
 
@@ -345,6 +346,7 @@ async def upload_contract(
         doc = sub.model_dump()
         doc["created_at"] = doc["created_at"].isoformat()
         await db.subscriptions.insert_one(doc)
+        doc.pop("_id", None)
         sub_doc = doc
 
     return {"contract_id": contract_id, "extracted": extracted, "subscription": sub_doc}
@@ -419,6 +421,7 @@ async def import_csv(file: UploadFile = File(...), user: User = Depends(get_curr
         doc = sub.model_dump()
         doc["created_at"] = doc["created_at"].isoformat()
         await db.subscriptions.insert_one(doc)
+        doc.pop("_id", None)
         created += 1
     return {"created": created}
 
